@@ -1,0 +1,43 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/forum-api
+            git pull origin master
+
+            # Install fnm
+            curl -fsSL https://fnm.vercel.app/install | bash
+
+            # Ensure fnm is in PATH
+            export FNM_PATH="$HOME/.local/share/fnm"
+            export PATH="$FNM_PATH:$PATH"
+            eval "$(fnm env)"
+
+            # Install and use Node.js v22
+            fnm install v22
+            fnm use v22
+
+            # Verify Node.js
+            node -v
+
+            # Install dependencies and restart app
+            npm install -g pm2
+            npm install
+            npm run migrate up
+            pm2 restart forum-api
