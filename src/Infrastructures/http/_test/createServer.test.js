@@ -27,8 +27,9 @@ describe('HTTP server', () => {
       });
 
       // Assert
+      const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(200);
-      expect(response.payload).toEqual('Welcome to Forum API');
+      expect(responseJson.value).toEqual('Welcome to Forum API');
     });
   });
 
