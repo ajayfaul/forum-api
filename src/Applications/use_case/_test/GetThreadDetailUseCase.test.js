@@ -5,6 +5,7 @@ const ReplyDetail = require('../../../Domains/replies/entities/ReplyDetail');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const ReplyRepository = require('../../../Domains/replies/ReplyRepository');
+const CommentLikeRepository = require('../../../Domains/likes/CommentLikeRepository');
 
 describe('GetThreadDetailUseCase', () => {
   it('should orchestrating the get thread detail action correctly', async () => {
@@ -54,6 +55,7 @@ describe('GetThreadDetailUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
+    const mockCommentLikeRepository = new CommentLikeRepository();
 
     mockThreadRepository.getThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve(mockThread));
@@ -125,6 +127,7 @@ describe('GetThreadDetailUseCase', () => {
     expect(mockThreadRepository.getThreadById).toBeCalledWith('thread-123');
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith('thread-123');
     expect(mockReplyRepository.getRepliesByCommentId).toBeCalledTimes(2);
+    expect(mockCommentLikeRepository.getLikeCountByCommentId).toBeCalledTimes(2);
   });
 
   it('should handle Date objects in reply dates correctly', async () => {
