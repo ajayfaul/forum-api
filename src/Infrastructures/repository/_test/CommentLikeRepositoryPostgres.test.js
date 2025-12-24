@@ -7,6 +7,13 @@ const CommentLikeRepositoryPostgres = require('../CommentLikeRepositoryPostgres'
 const CommentLikeRepository = require('../../../Domains/likes/CommentLikeRepository');
 
 describe('CommentLikeRepositoryPostgres', () => {
+  beforeAll(async () => {
+    await CommentLikesTableTestHelper.cleanTable();
+    await CommentsTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
+  });
+
   afterEach(async () => {
     await CommentLikesTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
